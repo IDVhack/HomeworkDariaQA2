@@ -1,0 +1,1215 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Свои люди</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#efe9de;
+    --surface:#ffffff;
+    --surface-2:#f7f2e8;
+    --ink:#2a2622;
+    --ink-soft:#746b5e;
+    --ink-faint:#a89d8c;
+    --line:#ddd2bd;
+    --accent:#2f4d3e;
+    --accent-ink:#f7f4ec;
+    --accent-soft:#e3ebe3;
+    --warm:#b4793a;
+    --warm-soft:#f2e3cf;
+    --danger:#9b4030;
+    --danger-soft:#f3ded8;
+    --shadow: 0 1px 2px rgba(42,38,34,.06), 0 6px 20px -8px rgba(42,38,34,.18);
+    --radius: 14px;
+    --cat-food:#c9793f;
+    --cat-cleaning:#4c8fa8;
+    --cat-repair:#8d6b9c;
+    --cat-transport:#4c8f63;
+    --cat-pets:#c97aa0;
+    --cat-other:#8c8377;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#181a17;
+      --surface:#222420;
+      --surface-2:#272a24;
+      --ink:#ece7dc;
+      --ink-soft:#a89f8e;
+      --ink-faint:#726c60;
+      --line:#383b32;
+      --accent:#7cae91;
+      --accent-ink:#12211a;
+      --accent-soft:#243128;
+      --warm:#e0ac63;
+      --warm-soft:#3a2f1e;
+      --danger:#e0968a;
+      --danger-soft:#3a2521;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -12px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#181a17;
+    --surface:#222420;
+    --surface-2:#272a24;
+    --ink:#ece7dc;
+    --ink-soft:#a89f8e;
+    --ink-faint:#726c60;
+    --line:#383b32;
+    --accent:#7cae91;
+    --accent-ink:#12211a;
+    --accent-soft:#243128;
+    --warm:#e0ac63;
+    --warm-soft:#3a2f1e;
+    --danger:#e0968a;
+    --danger-soft:#3a2521;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -12px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 20px 80px;}
+
+  .top{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .brand-mark{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:clamp(1.7rem, 1.3rem + 1.6vw, 2.35rem);
+    margin:0;
+    letter-spacing:-.01em;
+    text-wrap:balance;
+  }
+  .tagline{color:var(--ink-soft);font-size:.92rem;margin:2px 0 0;}
+  .btn{
+    font:inherit;
+    border:none;
+    cursor:pointer;
+    border-radius:10px;
+    padding:11px 18px;
+    font-weight:600;
+    font-size:.92rem;
+    display:inline-flex;align-items:center;gap:7px;
+    transition:transform .12s ease, background .15s ease, opacity .15s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{opacity:.92;}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
+  .btn-ghost:hover{background:var(--surface-2);}
+  .btn-danger{background:var(--danger-soft);color:var(--danger);}
+  .btn-danger:hover{opacity:.85;}
+  .btn-warm{background:var(--warm);color:#231705;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-sm{padding:7px 12px;font-size:.82rem;border-radius:8px;}
+  .btn-block{width:100%;justify-content:center;}
+
+  .toolbar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    margin-bottom:20px;
+  }
+  .search{
+    flex:1 1 220px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    font:inherit;
+    color:var(--ink);
+  }
+  .search:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .search::placeholder{color:var(--ink-faint);}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-soft);
+    border-radius:999px;
+    padding:7px 13px;
+    font-size:.82rem;
+    font-weight:500;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+    white-space:nowrap;
+  }
+  .chip .dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+  .chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);}
+
+  .banner{
+    background:var(--warm-soft);
+    border:1px solid var(--warm);
+    color:var(--ink);
+    border-radius:10px;
+    padding:11px 15px;
+    font-size:.87rem;
+    margin-bottom:18px;
+    display:none;
+  }
+  .banner.show{display:block;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
+    gap:16px;
+  }
+  .empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+  }
+  .empty strong{display:block;color:var(--ink);font-family:"Fraunces",serif;font-size:1.2rem;font-weight:600;margin-bottom:6px;}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:10px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{transform:translateY(-2px);}
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .cat{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .cat .dot{width:8px;height:8px;border-radius:50%;}
+  .price{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-weight:600;
+    font-size:.88rem;
+    background:var(--warm-soft);
+    color:var(--warm);
+    padding:4px 9px;
+    border-radius:7px;
+    white-space:nowrap;
+  }
+  .card h3{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:1.12rem;
+    margin:0;
+    line-height:1.25;
+    text-wrap:balance;
+  }
+  .card p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:.89rem;
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .card-foot{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding-top:10px;
+    border-top:1px solid var(--line);
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+  .author{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .author b{color:var(--ink);font-weight:600;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .status{
+    font-size:.74rem;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .status.open{background:var(--accent-soft);color:var(--accent);}
+  .status.booked{background:var(--danger-soft);color:var(--danger);}
+  .you-badge{
+    font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-soft);padding:2px 6px;border-radius:5px;margin-left:6px;
+  }
+
+  /* auth screen */
+  .auth-outer{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .auth-card{
+    width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);
+    border-radius:18px;padding:30px;box-shadow:var(--shadow);
+  }
+  .auth-brand{text-align:center;margin-bottom:22px;}
+  .auth-brand h1{font-size:2rem;}
+  .auth-brand p{color:var(--ink-soft);font-size:.88rem;margin:6px 0 0;}
+  .tabs{display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:4px;margin-bottom:20px;}
+  .tab-btn{
+    flex:1;border:none;background:transparent;color:var(--ink-soft);font:inherit;font-weight:600;
+    font-size:.87rem;padding:9px 0;border-radius:8px;cursor:pointer;
+  }
+  .tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);}
+  .field-error{color:var(--danger);font-size:.82rem;margin:-6px 0 12px;min-height:1em;}
+  .hint{color:var(--ink-faint);font-size:.78rem;margin-top:4px;}
+
+  /* modal */
+  .overlay{
+    position:fixed;inset:0;background:rgba(20,18,15,.5);
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:5vh 16px;overflow-y:auto;
+    z-index:50;
+  }
+  .overlay.hidden{display:none;}
+  .modal{
+    background:var(--surface);
+    border-radius:16px;
+    max-width:480px;width:100%;
+    padding:26px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .modal h2{
+    font-family:"Fraunces",serif;font-weight:600;font-size:1.35rem;margin:0 0 4px;text-wrap:balance;
+  }
+  .modal .sub{color:var(--ink-soft);font-size:.88rem;margin:0 0 18px;}
+  .field{margin-bottom:14px;display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:.82rem;font-weight:600;color:var(--ink-soft);}
+  .field input, .field select, .field textarea{
+    font:inherit;padding:10px 12px;border-radius:9px;border:1px solid var(--line);
+    background:var(--surface-2);color:var(--ink);width:100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .field textarea{resize:vertical;min-height:80px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+  .modal-close{
+    position:absolute;top:16px;right:16px;background:none;border:none;color:var(--ink-soft);
+    font-size:1.3rem;cursor:pointer;line-height:1;padding:4px;
+  }
+  .modal-inner{position:relative;}
+
+  .detail-desc{color:var(--ink-soft);font-size:.94rem;line-height:1.6;margin:14px 0;white-space:pre-wrap;}
+  .detail-price{
+    font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--warm);
+    background:var(--warm-soft);display:inline-block;padding:5px 11px;border-radius:8px;font-size:.95rem;
+  }
+  .phone-reveal{
+    background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;
+    padding:14px;margin-top:14px;display:flex;flex-direction:column;gap:8px;
+  }
+  .phone-reveal .num{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:1.05rem;}
+  .phone-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .phone-actions a, .phone-actions button{text-decoration:none;}
+  .confirm-box{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
+    padding:14px;margin-top:16px;
+  }
+  .confirm-box p{margin:0 0 12px;font-size:.9rem;}
+
+  .userbar{
+    display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ink-soft);
+  }
+  .userbar b{color:var(--ink);}
+
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:var(--bg);
+    padding:10px 18px;border-radius:9px;font-size:.87rem;
+    box-shadow:var(--shadow);z-index:80;opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+  footer.note{
+    text-align:center;color:var(--ink-faint);font-size:.78rem;margin-top:40px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div id="app" artifact-local></div>
+<script id="app-state" type="application/json">{"users": [], "listings": []}</script>
+<script>
+(function(){
+  "use strict";
+  try{
+    document.body.setAttribute('artifact-local', '');
+    document.documentElement.setAttribute('artifact-local', '');
+  }catch(e){}
+  var APP_SCRIPT_SOURCE = document.currentScript.textContent;
+  var state = JSON.parse(document.getElementById('app-state').textContent);
+  var activeCategory = 'all';
+  var searchQuery = '';
+  var authTab = 'login';
+  var session = loadSession();
+
+  var CATS = {
+    food:      {label:'Еда',           color:'var(--cat-food)'},
+    cleaning:  {label:'Уборка',        color:'var(--cat-cleaning)'},
+    repair:    {label:'Ремонт',        color:'var(--cat-repair)'},
+    transport: {label:'Транспорт/дела',color:'var(--cat-transport)'},
+    pets:      {label:'Питомцы',       color:'var(--cat-pets)'},
+    other:     {label:'Другое',        color:'var(--cat-other)'}
+  };
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function fmtPrice(n){
+    var num = Number(n) || 0;
+    return num.toLocaleString('ru-RU') + ' ₽';
+  }
+  function uid(prefix){
+    return (prefix||'l') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+  }
+
+  // ---------- auth helpers ----------
+  function loadSession(){
+    try{
+      var raw = localStorage.getItem('sl_session');
+      if(!raw) return null;
+      var parsed = JSON.parse(raw);
+      if(parsed && parsed.username) return parsed;
+    }catch(e){}
+    return null;
+  }
+  function persistSession(username){
+    try{ localStorage.setItem('sl_session', JSON.stringify({username:username})); }catch(e){}
+  }
+  function clearSession(){
+    try{ localStorage.removeItem('sl_session'); }catch(e){}
+  }
+  function currentUser(){
+    if(!session) return null;
+    return state.users.find(function(u){ return u.username === session.username; }) || null;
+  }
+  function findUser(username){
+    var lower = String(username||'').toLowerCase();
+    return state.users.find(function(u){ return u.username.toLowerCase() === lower; }) || null;
+  }
+  async function sha256Hex(str){
+    var enc = new TextEncoder().encode(str);
+    var buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.prototype.map.call(new Uint8Array(buf), function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+  function randomSalt(){
+    return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  }
+  async function hashPassword(password, salt){
+    return sha256Hex(salt + ':' + password);
+  }
+
+  // ---------- persistence ----------
+  var HEAD_HTML = `<meta charset="utf-8">
+<title>Свои люди</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#efe9de;
+    --surface:#ffffff;
+    --surface-2:#f7f2e8;
+    --ink:#2a2622;
+    --ink-soft:#746b5e;
+    --ink-faint:#a89d8c;
+    --line:#ddd2bd;
+    --accent:#2f4d3e;
+    --accent-ink:#f7f4ec;
+    --accent-soft:#e3ebe3;
+    --warm:#b4793a;
+    --warm-soft:#f2e3cf;
+    --danger:#9b4030;
+    --danger-soft:#f3ded8;
+    --shadow: 0 1px 2px rgba(42,38,34,.06), 0 6px 20px -8px rgba(42,38,34,.18);
+    --radius: 14px;
+    --cat-food:#c9793f;
+    --cat-cleaning:#4c8fa8;
+    --cat-repair:#8d6b9c;
+    --cat-transport:#4c8f63;
+    --cat-pets:#c97aa0;
+    --cat-other:#8c8377;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#181a17;
+      --surface:#222420;
+      --surface-2:#272a24;
+      --ink:#ece7dc;
+      --ink-soft:#a89f8e;
+      --ink-faint:#726c60;
+      --line:#383b32;
+      --accent:#7cae91;
+      --accent-ink:#12211a;
+      --accent-soft:#243128;
+      --warm:#e0ac63;
+      --warm-soft:#3a2f1e;
+      --danger:#e0968a;
+      --danger-soft:#3a2521;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -12px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#181a17;
+    --surface:#222420;
+    --surface-2:#272a24;
+    --ink:#ece7dc;
+    --ink-soft:#a89f8e;
+    --ink-faint:#726c60;
+    --line:#383b32;
+    --accent:#7cae91;
+    --accent-ink:#12211a;
+    --accent-soft:#243128;
+    --warm:#e0ac63;
+    --warm-soft:#3a2f1e;
+    --danger:#e0968a;
+    --danger-soft:#3a2521;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -12px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 20px 80px;}
+
+  .top{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .brand-mark{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:clamp(1.7rem, 1.3rem + 1.6vw, 2.35rem);
+    margin:0;
+    letter-spacing:-.01em;
+    text-wrap:balance;
+  }
+  .tagline{color:var(--ink-soft);font-size:.92rem;margin:2px 0 0;}
+  .btn{
+    font:inherit;
+    border:none;
+    cursor:pointer;
+    border-radius:10px;
+    padding:11px 18px;
+    font-weight:600;
+    font-size:.92rem;
+    display:inline-flex;align-items:center;gap:7px;
+    transition:transform .12s ease, background .15s ease, opacity .15s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{opacity:.92;}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
+  .btn-ghost:hover{background:var(--surface-2);}
+  .btn-danger{background:var(--danger-soft);color:var(--danger);}
+  .btn-danger:hover{opacity:.85;}
+  .btn-warm{background:var(--warm);color:#231705;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-sm{padding:7px 12px;font-size:.82rem;border-radius:8px;}
+  .btn-block{width:100%;justify-content:center;}
+
+  .toolbar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    margin-bottom:20px;
+  }
+  .search{
+    flex:1 1 220px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    font:inherit;
+    color:var(--ink);
+  }
+  .search:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .search::placeholder{color:var(--ink-faint);}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-soft);
+    border-radius:999px;
+    padding:7px 13px;
+    font-size:.82rem;
+    font-weight:500;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+    white-space:nowrap;
+  }
+  .chip .dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+  .chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);}
+
+  .banner{
+    background:var(--warm-soft);
+    border:1px solid var(--warm);
+    color:var(--ink);
+    border-radius:10px;
+    padding:11px 15px;
+    font-size:.87rem;
+    margin-bottom:18px;
+    display:none;
+  }
+  .banner.show{display:block;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
+    gap:16px;
+  }
+  .empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+  }
+  .empty strong{display:block;color:var(--ink);font-family:"Fraunces",serif;font-size:1.2rem;font-weight:600;margin-bottom:6px;}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:10px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{transform:translateY(-2px);}
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .cat{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .cat .dot{width:8px;height:8px;border-radius:50%;}
+  .price{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-weight:600;
+    font-size:.88rem;
+    background:var(--warm-soft);
+    color:var(--warm);
+    padding:4px 9px;
+    border-radius:7px;
+    white-space:nowrap;
+  }
+  .card h3{
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size:1.12rem;
+    margin:0;
+    line-height:1.25;
+    text-wrap:balance;
+  }
+  .card p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:.89rem;
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .card-foot{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding-top:10px;
+    border-top:1px solid var(--line);
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+  .author{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .author b{color:var(--ink);font-weight:600;font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .status{
+    font-size:.74rem;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .status.open{background:var(--accent-soft);color:var(--accent);}
+  .status.booked{background:var(--danger-soft);color:var(--danger);}
+  .you-badge{
+    font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-soft);padding:2px 6px;border-radius:5px;margin-left:6px;
+  }
+
+  /* auth screen */
+  .auth-outer{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .auth-card{
+    width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);
+    border-radius:18px;padding:30px;box-shadow:var(--shadow);
+  }
+  .auth-brand{text-align:center;margin-bottom:22px;}
+  .auth-brand h1{font-size:2rem;}
+  .auth-brand p{color:var(--ink-soft);font-size:.88rem;margin:6px 0 0;}
+  .tabs{display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:4px;margin-bottom:20px;}
+  .tab-btn{
+    flex:1;border:none;background:transparent;color:var(--ink-soft);font:inherit;font-weight:600;
+    font-size:.87rem;padding:9px 0;border-radius:8px;cursor:pointer;
+  }
+  .tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);}
+  .field-error{color:var(--danger);font-size:.82rem;margin:-6px 0 12px;min-height:1em;}
+  .hint{color:var(--ink-faint);font-size:.78rem;margin-top:4px;}
+
+  /* modal */
+  .overlay{
+    position:fixed;inset:0;background:rgba(20,18,15,.5);
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:5vh 16px;overflow-y:auto;
+    z-index:50;
+  }
+  .overlay.hidden{display:none;}
+  .modal{
+    background:var(--surface);
+    border-radius:16px;
+    max-width:480px;width:100%;
+    padding:26px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .modal h2{
+    font-family:"Fraunces",serif;font-weight:600;font-size:1.35rem;margin:0 0 4px;text-wrap:balance;
+  }
+  .modal .sub{color:var(--ink-soft);font-size:.88rem;margin:0 0 18px;}
+  .field{margin-bottom:14px;display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:.82rem;font-weight:600;color:var(--ink-soft);}
+  .field input, .field select, .field textarea{
+    font:inherit;padding:10px 12px;border-radius:9px;border:1px solid var(--line);
+    background:var(--surface-2);color:var(--ink);width:100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .field textarea{resize:vertical;min-height:80px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+  .modal-close{
+    position:absolute;top:16px;right:16px;background:none;border:none;color:var(--ink-soft);
+    font-size:1.3rem;cursor:pointer;line-height:1;padding:4px;
+  }
+  .modal-inner{position:relative;}
+
+  .detail-desc{color:var(--ink-soft);font-size:.94rem;line-height:1.6;margin:14px 0;white-space:pre-wrap;}
+  .detail-price{
+    font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--warm);
+    background:var(--warm-soft);display:inline-block;padding:5px 11px;border-radius:8px;font-size:.95rem;
+  }
+  .phone-reveal{
+    background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;
+    padding:14px;margin-top:14px;display:flex;flex-direction:column;gap:8px;
+  }
+  .phone-reveal .num{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:1.05rem;}
+  .phone-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .phone-actions a, .phone-actions button{text-decoration:none;}
+  .confirm-box{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
+    padding:14px;margin-top:16px;
+  }
+  .confirm-box p{margin:0 0 12px;font-size:.9rem;}
+
+  .userbar{
+    display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--ink-soft);
+  }
+  .userbar b{color:var(--ink);}
+
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:var(--bg);
+    padding:10px 18px;border-radius:9px;font-size:.87rem;
+    box-shadow:var(--shadow);z-index:80;opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+  footer.note{
+    text-align:center;color:var(--ink-faint);font-size:.78rem;margin-top:40px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>`;
+  function buildFullHtml(newState){
+    var stateJson = JSON.stringify(newState).replace(/</g, '\\u003c');
+    return '<!doctype html>\n<html lang="ru">\n' + HEAD_HTML + '\n<body>\n' +
+      '<div id="app" artifact-local></div>\n' +
+      '<script id="app-state" type="application/json">' + stateJson + '</' + 'script>\n' +
+      '<script>' + APP_SCRIPT_SOURCE + '</' + 'script>\n' +
+      '</body>\n</html>';
+  }
+
+  function hasArtifactCapability(){
+    return typeof window !== 'undefined' && !!window.claude && typeof window.claude.use === 'function';
+  }
+  function loadLocalState(){
+    try{
+      var raw = localStorage.getItem('sl_state');
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return null;
+  }
+  function saveLocalState(s){
+    try{ localStorage.setItem('sl_state', JSON.stringify(s)); }catch(e){}
+  }
+
+  function save(newState, opts){
+    opts = opts || {};
+    state = newState;
+    if(!hasArtifactCapability()){
+      // Standalone local file (no Claude artifact platform around it): keep data in this browser's storage.
+      saveLocalState(newState);
+      render();
+      if(opts.toast) showToast(opts.toast);
+      return Promise.resolve(true);
+    }
+    return claude.use('artifact').then(function(cap){
+      if(!cap){
+        showToast('Не удалось сохранить изменения');
+        return false;
+      }
+      return cap.publish(buildFullHtml(newState)).then(function(){
+        if(opts.toast) showToast(opts.toast);
+        return true;
+      }).catch(function(err){
+        var code = err && err.code;
+        if(code === 'conflict'){
+          // view reloads to the winning version
+        } else {
+          showToast('Не удалось сохранить: ' + (err && err.message ? err.message : 'ошибка'));
+        }
+        return false;
+      });
+    });
+  }
+
+  // ---------- toast ----------
+  var toastTimer = null;
+  function showToast(msg){
+    var el = document.getElementById('toast');
+    if(!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+  }
+
+  // ================= AUTH SCREEN =================
+  function authScreenHtml(){
+    var loginActive = authTab === 'login';
+    return '<div class="auth-outer"><div class="auth-card">' +
+      '<div class="auth-brand"><h1>Свои люди</h1><p>Доска объявлений дома. Войдите, чтобы смотреть и размещать.</p></div>' +
+      '<div class="tabs">' +
+        '<button class="tab-btn ' + (loginActive?'active':'') + '" data-tab="login">Войти</button>' +
+        '<button class="tab-btn ' + (!loginActive?'active':'') + '" data-tab="register">Регистрация</button>' +
+      '</div>' +
+      (loginActive ? loginFormHtml() : registerFormHtml()) +
+    '</div></div>';
+  }
+  function loginFormHtml(){
+    return '<form id="form-login">' +
+      '<div class="field"><label>Логин</label><input required name="username" autocomplete="username" placeholder="latin_login"></div>' +
+      '<div class="field"><label>Пароль</label><input required type="password" name="password" autocomplete="current-password" placeholder="••••••"></div>' +
+      '<div class="field-error" id="login-error"></div>' +
+      '<button type="submit" class="btn btn-primary btn-block">Войти</button>' +
+    '</form>';
+  }
+  function registerFormHtml(){
+    return '<form id="form-register">' +
+      '<div class="field"><label>Логин (латиница, уникальный)</label><input required name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,20}" placeholder="natalya82"></div>' +
+      '<div class="hint" style="margin:-8px 0 12px;">3–20 символов: латинские буквы, цифры, «_»</div>' +
+      '<div class="field"><label>Пароль</label><input required type="password" minlength="4" name="password" autocomplete="new-password" placeholder="минимум 4 символа"></div>' +
+      '<div class="field"><label>Повторите пароль</label><input required type="password" name="password2" autocomplete="new-password"></div>' +
+      '<div class="field"><label>Ваше имя (видно соседям)</label><input required maxlength="60" name="displayName" placeholder="Наталья"></div>' +
+      '<div class="row2">' +
+        '<div class="field"><label>Кв. (необязательно)</label><input maxlength="10" name="apt" placeholder="17"></div>' +
+        '<div class="field"><label>Телефон</label><input required maxlength="30" name="phone" placeholder="+7 900 000-00-00"></div>' +
+      '</div>' +
+      '<div class="field-error" id="register-error"></div>' +
+      '<button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>' +
+    '</form>';
+  }
+  function renderAuthScreen(){
+    var app = document.getElementById('app');
+    app.innerHTML = authScreenHtml() + '<div class="toast" id="toast"></div>';
+    document.querySelectorAll('.tab-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){ authTab = btn.getAttribute('data-tab'); renderAuthScreen(); });
+    });
+    var loginForm = document.getElementById('form-login');
+    if(loginForm){
+      loginForm.addEventListener('submit', async function(e){
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        var username = String(fd.get('username')||'').trim();
+        var password = String(fd.get('password')||'');
+        var user = findUser(username);
+        var errEl = document.getElementById('login-error');
+        if(!user){ errEl.textContent = 'Такого логина нет. Проверьте написание или зарегистрируйтесь.'; return; }
+        var hash = await hashPassword(password, user.salt);
+        if(hash !== user.hash){ errEl.textContent = 'Неверный пароль.'; return; }
+        session = {username: user.username};
+        persistSession(user.username);
+        render();
+      });
+    }
+    var regForm = document.getElementById('form-register');
+    if(regForm){
+      regForm.addEventListener('submit', async function(e){
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        var username = String(fd.get('username')||'').trim();
+        var password = String(fd.get('password')||'');
+        var password2 = String(fd.get('password2')||'');
+        var displayName = String(fd.get('displayName')||'').trim();
+        var apt = String(fd.get('apt')||'').trim();
+        var phone = String(fd.get('phone')||'').trim();
+        var errEl = document.getElementById('register-error');
+        if(!/^[A-Za-z0-9_]{3,20}$/.test(username)){ errEl.textContent = 'Логин: 3–20 символов, латиница/цифры/подчёркивание.'; return; }
+        if(findUser(username)){ errEl.textContent = 'Этот логин уже занят.'; return; }
+        if(password.length < 4){ errEl.textContent = 'Пароль слишком короткий.'; return; }
+        if(password !== password2){ errEl.textContent = 'Пароли не совпадают.'; return; }
+        if(!displayName || !phone){ errEl.textContent = 'Заполните имя и телефон.'; return; }
+        var salt = randomSalt();
+        var hash = await hashPassword(password, salt);
+        var user = {
+          username: username, salt: salt, hash: hash,
+          displayName: displayName, apt: apt, phone: phone,
+          createdAt: new Date().toISOString()
+        };
+        var newState = Object.assign({}, state, {users: state.users.concat([user])});
+        var ok = await save(newState, {toast:'Аккаунт создан'});
+        if(ok !== false){
+          session = {username: username};
+          persistSession(username);
+        }
+        render();
+      });
+    }
+  }
+
+  // ================= BOARD =================
+  function catChipsHtml(){
+    var all = '<button class="chip ' + (activeCategory==='all'?'active':'') + '" data-cat="all">Все</button>';
+    var rest = Object.keys(CATS).map(function(k){
+      var c = CATS[k];
+      return '<button class="chip ' + (activeCategory===k?'active':'') + '" data-cat="' + k + '">' +
+        '<span class="dot" style="background:' + c.color + '"></span>' + esc(c.label) + '</button>';
+    }).join('');
+    return all + rest;
+  }
+
+  function authorOf(item){
+    return findUser(item.authorUsername);
+  }
+
+  function cardHtml(item){
+    var cat = CATS[item.category] || CATS.other;
+    var booked = item.status === 'booked';
+    var author = authorOf(item);
+    var me = currentUser();
+    var isMine = me && item.authorUsername === me.username;
+    var statusHtml = booked
+      ? '<span class="status booked">Забронировано' + (item.bookedBy && item.bookedBy.displayName ? ': ' + esc(item.bookedBy.displayName) : '') + '</span>'
+      : '<span class="status open">Свободно</span>';
+    return '<div class="card" data-open="' + esc(item.id) + '">' +
+      '<div class="card-top">' +
+        '<span class="cat"><span class="dot" style="background:' + cat.color + '"></span>' + esc(cat.label) + '</span>' +
+        '<span class="price">' + fmtPrice(item.price) + '</span>' +
+      '</div>' +
+      '<h3>' + esc(item.title) + '</h3>' +
+      '<p>' + esc(item.description) + '</p>' +
+      '<div class="card-foot">' +
+        '<div class="author"><b>' + esc(author ? author.displayName : 'Пользователь удалён') + (isMine ? '<span class="you-badge">Вы</span>' : '') + '</b>' + (author && author.apt ? '<span>кв. ' + esc(author.apt) + '</span>' : '') + '</div>' +
+        statusHtml +
+      '</div>' +
+    '</div>';
+  }
+
+  function filteredListings(){
+    var q = searchQuery.trim().toLowerCase();
+    return state.listings.filter(function(it){
+      if(activeCategory !== 'all' && it.category !== activeCategory) return false;
+      if(q && (it.title + ' ' + it.description).toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    }).slice().sort(function(a,b){
+      if((a.status==='booked') !== (b.status==='booked')) return a.status==='booked' ? 1 : -1;
+      return (b.createdAt||'').localeCompare(a.createdAt||'');
+    });
+  }
+
+  function render(){
+    var me = currentUser();
+    if(!me){
+      renderAuthScreen();
+      return;
+    }
+    var app = document.getElementById('app');
+    var list = filteredListings();
+    var gridHtml = list.length
+      ? list.map(cardHtml).join('')
+      : '<div class="empty"><strong>Пока пусто</strong>Разместите первое объявление — соседи увидят его сразу.</div>';
+
+    app.innerHTML =
+      '<div class="wrap">' +
+        '<div class="top">' +
+          '<div class="brand-mark">' +
+            '<h1>Свои люди</h1>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">' +
+            '<div class="userbar">Вы: <b>' + esc(me.displayName) + '</b><button class="btn btn-ghost btn-sm" id="btn-logout">Выйти</button></div>' +
+            '<button class="btn btn-primary" id="btn-add">+ Разместить объявление</button>' +
+          '</div>' +
+        '</div>' +
+        '<p class="tagline">Доска объявлений и бронирований для соседей по дому — борщ, уборка, мелкий ремонт и всё остальное.</p>' +
+        '<div class="toolbar">' +
+          '<input class="search" id="search" type="text" placeholder="Поиск по объявлениям…" value="' + esc(searchQuery) + '">' +
+        '</div>' +
+        '<div class="chips" id="chips">' + catChipsHtml() + '</div>' +
+        '<div class="grid" style="margin-top:18px;">' + gridHtml + '</div>' +
+        '<footer class="note">Оплата и договорённости — напрямую между соседями, при встрече.</footer>' +
+      '</div>' +
+      '<div class="overlay hidden" id="overlay-add"></div>' +
+      '<div class="overlay hidden" id="overlay-detail"></div>' +
+      '<div class="toast" id="toast"></div>';
+
+    wireStatic();
+  }
+
+  function wireStatic(){
+    document.getElementById('btn-add').addEventListener('click', openAddModal);
+    document.getElementById('btn-logout').addEventListener('click', function(){
+      session = null;
+      clearSession();
+      render();
+    });
+    document.getElementById('search').addEventListener('input', function(e){
+      searchQuery = e.target.value;
+      var caret = e.target.selectionStart;
+      render();
+      var input = document.getElementById('search');
+      input.focus();
+      try{ input.setSelectionRange(caret, caret); }catch(e){}
+    });
+    document.getElementById('chips').addEventListener('click', function(e){
+      var btn = e.target.closest('[data-cat]');
+      if(!btn) return;
+      activeCategory = btn.getAttribute('data-cat');
+      render();
+    });
+    document.querySelectorAll('[data-open]').forEach(function(el){
+      el.addEventListener('click', function(){
+        openDetailModal(el.getAttribute('data-open'));
+      });
+    });
+  }
+
+  // ---------- add modal ----------
+  function categoryOptionsHtml(selected){
+    return Object.keys(CATS).map(function(k){
+      return '<option value="' + k + '"' + (k===selected?' selected':'') + '>' + esc(CATS[k].label) + '</option>';
+    }).join('');
+  }
+
+  function openAddModal(){
+    var overlay = document.getElementById('overlay-add');
+    overlay.classList.remove('hidden');
+    overlay.innerHTML =
+      '<div class="modal">' +
+        '<div class="modal-inner">' +
+          '<button class="modal-close" id="close-add" aria-label="Закрыть">✕</button>' +
+          '<h2>Новое объявление</h2>' +
+          '<p class="sub">Опишите, что вы предлагаете соседям. Ваше имя, кв. и телефон подставятся из профиля.</p>' +
+          '<form id="form-add">' +
+            '<div class="field"><label>Что вы предлагаете</label><input required maxlength="80" name="title" placeholder="Например: приготовлю борщ"></div>' +
+            '<div class="row2">' +
+              '<div class="field"><label>Категория</label><select name="category">' + categoryOptionsHtml('other') + '</select></div>' +
+              '<div class="field"><label>Цена, ₽</label><input required type="number" min="0" step="1" name="price" placeholder="1000"></div>' +
+            '</div>' +
+            '<div class="field"><label>Описание</label><textarea required maxlength="500" name="description" placeholder="Подробности: что входит, сроки, условия…"></textarea></div>' +
+            '<div class="modal-actions">' +
+              '<button type="button" class="btn btn-ghost" id="cancel-add">Отмена</button>' +
+              '<button type="submit" class="btn btn-primary">Разместить</button>' +
+            '</div>' +
+          '</form>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('close-add').addEventListener('click', closeAddModal);
+    document.getElementById('cancel-add').addEventListener('click', closeAddModal);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeAddModal(); });
+    document.getElementById('form-add').addEventListener('submit', function(e){
+      e.preventDefault();
+      var me = currentUser();
+      if(!me) return;
+      var fd = new FormData(e.target);
+      var item = {
+        id: uid('l'),
+        title: String(fd.get('title')||'').trim(),
+        category: String(fd.get('category')||'other'),
+        price: Number(fd.get('price')||0),
+        description: String(fd.get('description')||'').trim(),
+        authorUsername: me.username,
+        status: 'open',
+        bookedBy: null,
+        createdAt: new Date().toISOString()
+      };
+      if(!item.title || !item.description) return;
+      var newState = Object.assign({}, state, {listings: state.listings.concat([item])});
+      closeAddModal();
+      save(newState, {toast:'Объявление размещено'});
+    });
+  }
+  function closeAddModal(){
+    document.getElementById('overlay-add').classList.add('hidden');
+  }
+
+  // ---------- detail / booking modal ----------
+  function openDetailModal(id){
+    var item = state.listings.find(function(x){ return x.id === id; });
+    if(!item) return;
+    var overlay = document.getElementById('overlay-detail');
+    overlay.classList.remove('hidden');
+    renderDetail(overlay, id);
+    overlay.addEventListener('click', function handler(e){ if(e.target === overlay){ closeDetailModal(); overlay.removeEventListener('click', handler); } });
+  }
+  function closeDetailModal(){
+    document.getElementById('overlay-detail').classList.add('hidden');
+  }
+
+  function renderDetail(overlay, id){
+    var item = state.listings.find(function(x){ return x.id === id; });
+    if(!item){ closeDetailModal(); return; }
+    var me = currentUser();
+    if(!me){ closeDetailModal(); return; }
+    var cat = CATS[item.category] || CATS.other;
+    var author = authorOf(item);
+    var booked = item.status === 'booked';
+    var isAuthor = item.authorUsername === me.username;
+    var isBooker = booked && item.bookedBy && item.bookedBy.username === me.username;
+
+    var actionBlock;
+    if(!booked){
+      if(isAuthor){
+        actionBlock = '<p class="sub" style="margin-top:16px;">Это ваше объявление — дождитесь брони соседа.</p>';
+      } else {
+        actionBlock = '<div class="confirm-box"><p>Забронировать за вами, <b>' + esc(me.displayName) + '</b>' + (me.apt ? ', кв. ' + esc(me.apt) : '') + '?</p>' +
+          '<button class="btn btn-warm" id="do-book">Забронировать</button></div>';
+      }
+    } else {
+      actionBlock =
+        '<div class="phone-reveal">' +
+          '<span>Забронировал(а): <b>' + esc(item.bookedBy.displayName) + (item.bookedBy.apt ? ', кв. ' + esc(item.bookedBy.apt) : '') + '</b></span>' +
+          (author ? '<span class="num">' + esc(author.phone) + '</span>' : '') +
+          '<div class="phone-actions">' +
+            (author ? '<a class="btn btn-primary" href="tel:' + esc(author.phone.replace(/[^+\d]/g,'')) + '">Позвонить</a>' : '') +
+            (author ? '<button class="btn btn-ghost" id="copy-phone" type="button">Скопировать номер</button>' : '') +
+            ((isAuthor || isBooker) ? '<button class="btn btn-ghost" id="cancel-booking" type="button">Отменить бронь</button>' : '') +
+          '</div>' +
+        '</div>';
+    }
+
+    overlay.innerHTML =
+      '<div class="modal">' +
+        '<div class="modal-inner">' +
+          '<button class="modal-close" id="close-detail" aria-label="Закрыть">✕</button>' +
+          '<span class="cat"><span class="dot" style="background:' + cat.color + '"></span>' + esc(cat.label) + '</span>' +
+          '<h2 style="margin-top:8px;">' + esc(item.title) + '</h2>' +
+          '<span class="detail-price">' + fmtPrice(item.price) + '</span>' +
+          '<p class="detail-desc">' + esc(item.description) + '</p>' +
+          '<p class="sub" style="margin:0;">Автор: <b style="color:var(--ink);">' + esc(author ? author.displayName : 'Пользователь удалён') + '</b>' + (author && author.apt ? ', кв. ' + esc(author.apt) : '') + '</p>' +
+          actionBlock +
+          (isAuthor ? '<div class="modal-actions"><button class="btn btn-danger" id="delete-listing" type="button">Удалить объявление</button></div>' : '') +
+        '</div>' +
+      '</div>';
+
+    document.getElementById('close-detail').addEventListener('click', closeDetailModal);
+
+    var bookBtn = document.getElementById('do-book');
+    if(bookBtn){
+      bookBtn.addEventListener('click', function(){
+        var updated = state.listings.map(function(x){
+          if(x.id !== id) return x;
+          return Object.assign({}, x, {status:'booked', bookedBy:{username: me.username, displayName: me.displayName, apt: me.apt, at:new Date().toISOString()}});
+        });
+        var newState = Object.assign({}, state, {listings: updated});
+        save(newState, {toast:'Бронь подтверждена — номер телефона открыт'});
+        renderDetail(overlay, id);
+      });
+    }
+
+    var cancelBtn = document.getElementById('cancel-booking');
+    if(cancelBtn){
+      cancelBtn.addEventListener('click', function(){
+        var updated = state.listings.map(function(x){
+          if(x.id !== id) return x;
+          return Object.assign({}, x, {status:'open', bookedBy:null});
+        });
+        var newState = Object.assign({}, state, {listings: updated});
+        save(newState, {toast:'Бронь отменена'});
+        renderDetail(overlay, id);
+      });
+    }
+
+    var copyBtn = document.getElementById('copy-phone');
+    if(copyBtn){
+      copyBtn.addEventListener('click', function(){
+        var text = author ? author.phone : '';
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(function(){ showToast('Номер скопирован'); }).catch(function(){ showToast(text); });
+        } else {
+          showToast(text);
+        }
+      });
+    }
+
+    var delBtn = document.getElementById('delete-listing');
+    if(delBtn){
+      delBtn.addEventListener('click', function(){
+        var updated = state.listings.filter(function(x){ return x.id !== id; });
+        var newState = Object.assign({}, state, {listings: updated});
+        closeDetailModal();
+        save(newState, {toast:'Объявление удалено'});
+      });
+    }
+  }
+
+  // ---------- init ----------
+  function init(){
+    if(!hasArtifactCapability()){
+      var local = loadLocalState();
+      if(local) state = local;
+    }
+    render();
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
