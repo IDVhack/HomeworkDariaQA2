@@ -759,9 +759,30 @@
       '</body>\n</html>';
   }
 
+  function hasArtifactCapability(){
+    return typeof window !== 'undefined' && !!window.claude && typeof window.claude.use === 'function';
+  }
+  function loadLocalState(){
+    try{
+      var raw = localStorage.getItem('sl_state');
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return null;
+  }
+  function saveLocalState(s){
+    try{ localStorage.setItem('sl_state', JSON.stringify(s)); }catch(e){}
+  }
+
   function save(newState, opts){
     opts = opts || {};
     state = newState;
+    if(!hasArtifactCapability()){
+      // Standalone local file (no Claude artifact platform around it): keep data in this browser's storage.
+      saveLocalState(newState);
+      render();
+      if(opts.toast) showToast(opts.toast);
+      return Promise.resolve(true);
+    }
     return claude.use('artifact').then(function(cap){
       if(!cap){
         showToast('Не удалось сохранить изменения');
@@ -1173,6 +1194,10 @@
 
   // ---------- init ----------
   function init(){
+    if(!hasArtifactCapability()){
+      var local = loadLocalState();
+      if(local) state = local;
+    }
     render();
   }
   if(document.readyState === 'loading'){
