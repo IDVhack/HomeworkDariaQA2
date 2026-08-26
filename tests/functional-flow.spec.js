@@ -22,13 +22,11 @@ test('регистрация → объявление → бронь → рас�
 
   await page.getByRole('button', { name: 'Забронировать' }).click();
 
-  // модалка деталей должна остаться открытой с раскрытым телефоном
-  // (известный дефект 1.4.1 — модалка закрывается сама; если открылась
-  // заново вручную, номер всё равно должен быть виден)
-  const overlay = page.locator('#overlay-detail');
-  if (!(await overlay.isVisible())) {
-    await openFirstListing(page);
-  }
+  // модалка деталей должна остаться открытой с раскрытым телефоном сразу
+  // после брони (известный дефект Ф-1 — overlay-detail получает класс
+  // hidden сам; тест обязан честно падать на этом, а не переоткрывать
+  // модалку в обход бага)
+  await expect(page.locator('#overlay-detail')).toBeVisible();
 
   await expect(page.locator('.phone-reveal .num')).toHaveText(author.phone);
   await expect(page.getByRole('link', { name: 'Позвонить' })).toHaveAttribute(
