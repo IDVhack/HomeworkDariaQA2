@@ -1,8 +1,14 @@
-// qa-spec.md, раздел 4 — регрессионные тесты на два дефекта, найденные
-// при нагрузочном тестировании (qa-report-volume.md):
-//   1) поиск не имеет debounce и деградирует на большом списке;
-//   2) при переполнении localStorage тост врёт об успехе, а данные тихо
-//      теряются.
+// qa-spec.md, раздел 4 — регрессионные тесты на дефекты, найденные при
+// нагрузочном тестировании (qa-report-volume.md):
+//   1) поиск не имеет debounce и деградирует на большом списке —
+//      всё ещё не исправлено, тест обязан падать;
+//   2) переполнение localStorage (qa-spec.md 4.6-4.8) — исправлено в
+//      qa-runs/2026-08-27_02-54-04/: тост больше не врёт об успехе,
+//      данные при реально исчерпанной квоте честно не сохраняются, и
+//      (после дополнительной находки независимого QA-ревью) на экране
+//      больше не появляется фантомная карточка несохранённого
+//      объявления. Тест теперь проверяет это ПРАВИЛЬНОЕ поведение как
+//      регресс-тест, а не ловит баг.
 // Эти тесты пишут ПРАВИЛЬНОЕ ожидаемое поведение. Если баги всё ещё
 // в коде — тесты обязаны падать. Это ожидаемо, красный — не повод
 // подгонять ассерт под текущее поведение.
@@ -66,7 +72,7 @@ test('поиск не деградирует на большом списке (d
   expect(elapsed, `рендер после одного нажатия занял ${elapsed.toFixed(1)} мс`).toBeLessThan(50);
 });
 
-test('переполнение localStorage: тост не должен врать об успехе', async ({ page }) => {
+test('переполнение localStorage: честная ошибка, без фантомной карточки и без тихой потери данных', async ({ page }) => {
   await clearState(page);
   await seedListings(page, { users: 10, listings: 20 });
 
@@ -99,20 +105,41 @@ test('переполнение localStorage: тост не должен врат
   });
 
   const stateBefore = await page.evaluate(() => localStorage.getItem('sl_state'));
+  const titleText = 'Quota overflow regression test';
 
   await page.getByRole('button', { name: '+ Разместить объявление' }).click();
-  await page.locator('#form-add [name=title]').fill('Quota overflow regression test');
+  await page.locator('#form-add [name=title]').fill(titleText);
   await page.locator('#form-add [name=price]').fill('1');
   await page.locator('#form-add [name=description]').fill('desc');
   await page.locator('#form-add button[type=submit]').click();
 
+  // 1) тост обязан честно сообщать об ошибке, а не врать об успехе —
+  // квота реально исчерпана, localStorage.setItem бросает
+  // QuotaExceededError, и это должно быть видно пользователю
   const toast = page.locator('#toast');
-  await expect(toast).toHaveText('Объявление размещено');
+  await expect(toast).toHaveText('Не удалось сохранить: закончилось место в хранилище браузера');
 
+  // 2) раз место реально кончилось, данные объективно не могли
+  // сохраниться — это физическое ограничение (см. qa-spec.md, 4.8),
+  // а не баг; ожидаем state в localStorage НЕИЗМЕННЫМ
   const stateAfter = await page.evaluate(() => localStorage.getItem('sl_state'));
   const actuallyPersisted = stateAfter !== stateBefore;
+  expect(actuallyPersisted, 'состояние в localStorage изменилось при исчерпанной квоте — это невозможно физически, проверь мок квоты').toBe(false);
 
-  // если тост сказал "успех", данные обязаны реально сохраниться —
-  // сейчас localStorage.setItem падает молча и это не так
-  expect(actuallyPersisted, 'тост показал успех, но состояние в localStorage не изменилось').toBe(true);
+  // 3) честный тост должен сопровождаться честным экраном: раз данные
+  // не сохранились, новой карточки в списке быть не должно (ни в
+  // модалке — она уже закрыта отправкой формы, ни на доске позади неё).
+  // Раньше здесь была найдена регрессия: state/render() вызывались
+  // безусловно, до проверки результата saveLocalState(), из-за чего
+  // на экране на мгновение появлялась карточка объявления, которого
+  // на самом деле нет в хранилище (qa-runs/2026-08-27_02-54-04/04-independent-review.md)
+  await expect(page.locator('.overlay:not(.hidden)')).toHaveCount(0);
+  await expect(page.locator('.grid', { hasText: titleText })).toHaveCount(0);
+
+  // 4) перезагрузка страницы не должна ничего "потерять" сверх того,
+  // что уже не сохранилось — состояние после reload должно совпадать
+  // с тем, что реально лежит в localStorage (никакой карточки не
+  // появится и после F5)
+  await page.reload();
+  await expect(page.locator('.grid', { hasText: titleText })).toHaveCount(0);
 });
