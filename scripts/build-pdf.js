@@ -3,7 +3,7 @@
 /**
  * Markdown -> PDF build.
  *
- * Renders REPORT.md and qa-spec.md to dist/*.pdf using headless Chromium
+ * Renders REPORT.md and qa-spec.md to submission/*.pdf using headless Chromium
  * driven by Playwright. Markdown is converted to HTML with `marked` and
  * wrapped in a fully self-contained HTML document (no external resources),
  * so it renders correctly offline.
@@ -15,11 +15,11 @@ const { chromium } = require('@playwright/test');
 const { marked } = require('marked');
 
 const ROOT = path.join(__dirname, '..');
-const DIST = path.join(ROOT, 'dist');
+const OUT_DIR = path.join(ROOT, 'submission');
 
 const JOBS = [
-  { input: path.join(ROOT, 'REPORT.md'), output: path.join(DIST, 'REPORT.pdf') },
-  { input: path.join(ROOT, 'qa-spec.md'), output: path.join(DIST, 'qa-spec.pdf') },
+  { input: path.join(ROOT, 'REPORT.md'), output: path.join(OUT_DIR, 'REPORT.pdf') },
+  { input: path.join(ROOT, 'qa-spec.md'), output: path.join(OUT_DIR, 'qa-spec.pdf') },
 ];
 
 const PDF_MARGIN = { top: '18mm', right: '18mm', bottom: '18mm', left: '18mm' };
@@ -162,8 +162,8 @@ ${body}
 }
 
 async function main() {
-  if (!fs.existsSync(DIST)) {
-    fs.mkdirSync(DIST, { recursive: true });
+  if (!fs.existsSync(OUT_DIR)) {
+    fs.mkdirSync(OUT_DIR, { recursive: true });
   }
 
   const browser = await chromium.launch();

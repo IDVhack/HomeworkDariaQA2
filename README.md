@@ -40,8 +40,11 @@ npm test
 (`scripts/static-server.js`, порт 8934) автоматически — отдельно
 ничего запускать не нужно. HTML-отчёт прогона: `npm run test:report`.
 
-`npm run build:pdf` — собрать PDF-версии `REPORT.md` и `qa-spec.md`
-в каталог `dist/` (headless Chromium через Playwright, `scripts/build-pdf.js`).
+`npm run build:pdf` — пересобрать PDF-версии `REPORT.md` и `qa-spec.md`
+в каталог `submission/` (headless Chromium через Playwright,
+`scripts/build-pdf.js`). Готовые файлы уже в репозитории:
+[`submission/REPORT.pdf`](submission/REPORT.pdf),
+[`submission/qa-spec.pdf`](submission/qa-spec.pdf).
 
 ## Где что лежит
 
@@ -49,7 +52,8 @@ npm test
 |---|---|
 | [`app-under-test/`](app-under-test/) | Код приложения под тестом: `index-local.html` (основной объект тестирования, с локальным `localStorage`-хранилищем), `index-seeded.html`/`index-for-artifact-publish.html` (варианты для публикации как Claude Artifact) |
 | [`tests/`](tests/) | Автотесты Playwright: `accessibility.spec.js` (axe-core), `keyboard-focus.spec.js` (Escape/фокус/focus-trap), `functional-flow.spec.js` (сквозной сценарий регистрация→объявление→бронь + выделенный красный тест на баг Ф-1), `permissions.spec.js` (права по логину), `security.spec.js` (XSS-инъекция, подделка сессии), `volume-bugs.spec.js` (нагрузка/объём данных), `bypass-ui.spec.js` (принятые ограничения при обходе UI — цена, самобронь, гонка записи) |
-| [`scripts/`](scripts/) | `static-server.js` (локальный сервер для тестов, порт 8934), `build-pdf.js` (`npm run build:pdf` — сборка `REPORT.md`/`qa-spec.md` в `dist/*.pdf`) |
+| [`scripts/`](scripts/) | `static-server.js` (локальный сервер для тестов, порт 8934), `build-pdf.js` (`npm run build:pdf` — сборка `REPORT.md`/`qa-spec.md` в `submission/*.pdf`) |
+| [`submission/`](submission/) | PDF-версии `REPORT.md` и `qa-spec.md` для сдачи, пересобираются `npm run build:pdf` |
 | [`qa-spec.md`](qa-spec.md) | Спецификация тестирования — сценарии и ожидаемое поведение по разделам: функциональность, доступность, устойчивость к кривым данным, нагрузка |
 | [`qa-report.md`](qa-report.md), [`qa-report-solo.md`](qa-report-solo.md), [`qa-report-volume.md`](qa-report-volume.md) | Отчёты ручных/агентских прогонов по `qa-spec.md` на разных этапах |
 | [`qa-review-independent.md`](qa-review-independent.md) | Независимый аудит «что пропустили предыдущие прогоны», с пометками, каким коммитом закрыта каждая находка |
