@@ -774,19 +774,24 @@
     return null;
   }
   function saveLocalState(s){
-    try{ localStorage.setItem('sl_state', JSON.stringify(s)); }catch(e){}
+    try{ localStorage.setItem('sl_state', JSON.stringify(s)); return true; }catch(e){ return false; }
   }
 
   function save(newState, opts){
     opts = opts || {};
-    state = newState;
     if(!hasArtifactCapability()){
       // Standalone local file (no Claude artifact platform around it): keep data in this browser's storage.
-      saveLocalState(newState);
-      render();
-      if(opts.toast) showToast(opts.toast);
-      return Promise.resolve(true);
+      var saved = saveLocalState(newState);
+      if(saved){
+        state = newState;
+        render();
+        if(opts.toast) showToast(opts.toast);
+      } else {
+        showToast('Не удалось сохранить: закончилось место в хранилище браузера');
+      }
+      return Promise.resolve(saved);
     }
+    state = newState;
     return claude.use('artifact').then(function(cap){
       if(!cap){
         showToast('Не удалось сохранить изменения');
