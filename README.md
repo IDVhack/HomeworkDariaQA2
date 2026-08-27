@@ -24,12 +24,12 @@ npx playwright install chromium
 npm test
 ```
 
-Ожидаемый результат: **15 passed / 12 failed**. Это не сломанные тесты
+Ожидаемый результат: **57 passed / 16 failed** (73 теста). Это не сломанные тесты
 и не ложные срабатывания — падения ассертят реальные, задокументированные
 дефекты приложения (недоступность модалок с клавиатуры, отсутствие
-`Escape`/focus-trap/`role=dialog`, нарушения `axe-core`, самозакрытие
-модалки брони до раскрытия телефона (баг Ф-1), отсутствие debounce
-у поиска).
+`Escape`/focus-trap/`role=dialog`, нарушения `axe-core` по контрасту и
+структуре на всех экранах, самозакрытие модалки брони до раскрытия
+телефона (баг Ф-1), отсутствие debounce у поиска).
 Тесты пишутся под **правильное** ожидаемое поведение, а не под то, что
 код делает сейчас — «подгонять под зелёный» здесь намеренно не
 принято, красный тест на известный баг — это рабочий результат, а не
@@ -51,7 +51,7 @@ npm test
 | Путь | Что это |
 |---|---|
 | [`app-under-test/`](app-under-test/) | Код приложения под тестом: `index-local.html` (основной объект тестирования, с локальным `localStorage`-хранилищем), `index-seeded.html`/`index-for-artifact-publish.html` (варианты для публикации как Claude Artifact) |
-| [`tests/`](tests/) | Автотесты Playwright: `accessibility.spec.js` (axe-core), `keyboard-focus.spec.js` (Escape/фокус/focus-trap), `functional-flow.spec.js` (сквозной сценарий регистрация→объявление→бронь + выделенный красный тест на баг Ф-1), `permissions.spec.js` (права по логину), `security.spec.js` (XSS-инъекция, подделка сессии), `volume-bugs.spec.js` (нагрузка/объём данных), `bypass-ui.spec.js` (принятые ограничения при обходе UI — цена, самобронь, гонка записи) |
+| [`tests/`](tests/) | Автотесты Playwright: `accessibility.spec.js` (axe-core), `keyboard-focus.spec.js` (Escape/фокус/focus-trap), `functional-flow.spec.js` (сквозной сценарий регистрация→объявление→бронь + выделенный красный тест на баг Ф-1), `permissions.spec.js` (права по логину), `security.spec.js` (XSS-инъекция, подделка сессии), `volume-bugs.spec.js` (нагрузка/объём данных), `bypass-ui.spec.js` (принятые ограничения при обходе UI — цена, самобронь, гонка записи), `func-*.spec.js` (qa-spec 1.1–1.4: регистрация/вход/размещение/бронь), `a11y-*.spec.js` (qa-spec 2.1/2.4: клавиатура + axe на остальных экранах), `robust-*.spec.js` (qa-spec 3.1–3.3, 3.5–3.7: пустые поля, цена, регистр логина) |
 | [`scripts/`](scripts/) | `static-server.js` (локальный сервер для тестов, порт 8934), `build-pdf.js` (`npm run build:pdf` — сборка `REPORT.md`/`qa-spec.md` в `submission/*.pdf`) |
 | [`submission/`](submission/) | PDF-версии `REPORT.md` и `qa-spec.md` для сдачи, пересобираются `npm run build:pdf` |
 | [`qa-spec.md`](qa-spec.md) | Спецификация тестирования — сценарии и ожидаемое поведение по разделам: функциональность, доступность, устойчивость к кривым данным, нагрузка |
