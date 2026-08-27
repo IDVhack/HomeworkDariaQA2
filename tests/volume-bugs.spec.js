@@ -56,20 +56,34 @@ async function seedListings(page, { users = 60, listings = 350 } = {}) {
 
 test('поиск не деградирует на большом списке (debounce)', async ({ page }) => {
   await clearState(page);
-  await seedListings(page, { users: 60, listings: 350 });
+  await seedListings(page, { users: 60, listings: 500 });
 
-  const search = page.locator('#search');
-  const elapsed = await search.evaluate((el) => {
-    const t0 = performance.now();
-    el.value = 'О';
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    return performance.now() - t0;
+  await page.locator('#search').waitFor();
+  // Один сэмпл шумит: на быстрой машине единичное нажатие случайно
+  // проскакивает под порог (или ловит race с ранним выходом render()),
+  // из-за чего npm test плавал 14/12 ↔ 15/11. Берём медиану из 10
+  // нажатий по списку в 500 объявлений — систематическая стоимость
+  // синхронного render() без debounce перекрывает разброс.
+  // Важно: render() каждый раз пересоздаёт #search, поэтому ноду берём
+  // из DOM заново на каждой итерации, а не держим старую ссылку.
+  const median = await page.evaluate(() => {
+    const CHARS = 'оеаниропдл'; // частые буквы: каждый запрос матчит почти всё → полная пересборка доски
+    const samples = [];
+    for (let i = 0; i < 10; i++) {
+      const el = document.getElementById('search');
+      const t0 = performance.now();
+      el.value = CHARS[i % CHARS.length];
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      samples.push(performance.now() - t0);
+    }
+    samples.sort((a, b) => a - b);
+    return (samples[4] + samples[5]) / 2;
   });
 
   // без debounce обработчик input пересобирает всю доску синхронно;
-  // ожидаем, что один символ обрабатывается быстро (порог ниже реально
+  // ожидаем, что нажатие обрабатывается быстро (порог ниже реально
   // наблюдавшихся 130-290 мс) — сейчас этот порог не соблюдается
-  expect(elapsed, `рендер после одного нажатия занял ${elapsed.toFixed(1)} мс`).toBeLessThan(50);
+  expect(median, `медианный рендер после нажатия занял ${median.toFixed(1)} мс`).toBeLessThan(50);
 });
 
 test('переполнение localStorage: честная ошибка, без фантомной карточки и без тихой потери данных', async ({ page }) => {
