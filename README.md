@@ -24,11 +24,12 @@ npx playwright install chromium
 npm test
 ```
 
-Ожидаемый результат: **9 passed / 13 failed**. Это не сломанные тесты
+Ожидаемый результат: **15 passed / 12 failed**. Это не сломанные тесты
 и не ложные срабатывания — падения ассертят реальные, задокументированные
 дефекты приложения (недоступность модалок с клавиатуры, отсутствие
-`Escape`/focus-trap/`role=dialog`, нарушения `axe-core`, отсутствие
-debounce у поиска, потеря данных при переполнении `localStorage`).
+`Escape`/focus-trap/`role=dialog`, нарушения `axe-core`, самозакрытие
+модалки брони до раскрытия телефона (баг Ф-1), отсутствие debounce
+у поиска).
 Тесты пишутся под **правильное** ожидаемое поведение, а не под то, что
 код делает сейчас — «подгонять под зелёный» здесь намеренно не
 принято, красный тест на известный баг — это рабочий результат, а не
@@ -39,14 +40,19 @@ debounce у поиска, потеря данных при переполнен�
 (`scripts/static-server.js`, порт 8934) автоматически — отдельно
 ничего запускать не нужно. HTML-отчёт прогона: `npm run test:report`.
 
+`npm run build:pdf` — собрать PDF-версии `REPORT.md` и `qa-spec.md`
+в каталог `dist/` (headless Chromium через Playwright, `scripts/build-pdf.js`).
+
 ## Где что лежит
 
 | Путь | Что это |
 |---|---|
 | [`app-under-test/`](app-under-test/) | Код приложения под тестом: `index-local.html` (основной объект тестирования, с локальным `localStorage`-хранилищем), `index-seeded.html`/`index-for-artifact-publish.html` (варианты для публикации как Claude Artifact) |
-| [`tests/`](tests/) | Автотесты Playwright: `accessibility.spec.js` (axe-core), `keyboard-focus.spec.js` (Escape/фокус/focus-trap), `functional-flow.spec.js` (сквозной сценарий регистрация→объявление→бронь), `permissions.spec.js` (права по логину), `security.spec.js` (XSS-инъекция, подделка сессии), `volume-bugs.spec.js` (нагрузка/объём данных) |
+| [`tests/`](tests/) | Автотесты Playwright: `accessibility.spec.js` (axe-core), `keyboard-focus.spec.js` (Escape/фокус/focus-trap), `functional-flow.spec.js` (сквозной сценарий регистрация→объявление→бронь + выделенный красный тест на баг Ф-1), `permissions.spec.js` (права по логину), `security.spec.js` (XSS-инъекция, подделка сессии), `volume-bugs.spec.js` (нагрузка/объём данных), `bypass-ui.spec.js` (принятые ограничения при обходе UI — цена, самобронь, гонка записи) |
+| [`scripts/`](scripts/) | `static-server.js` (локальный сервер для тестов, порт 8934), `build-pdf.js` (`npm run build:pdf` — сборка `REPORT.md`/`qa-spec.md` в `dist/*.pdf`) |
 | [`qa-spec.md`](qa-spec.md) | Спецификация тестирования — сценарии и ожидаемое поведение по разделам: функциональность, доступность, устойчивость к кривым данным, нагрузка |
 | [`qa-report.md`](qa-report.md), [`qa-report-solo.md`](qa-report-solo.md), [`qa-report-volume.md`](qa-report-volume.md) | Отчёты ручных/агентских прогонов по `qa-spec.md` на разных этапах |
 | [`qa-review-independent.md`](qa-review-independent.md) | Независимый аудит «что пропустили предыдущие прогоны», с пометками, каким коммитом закрыта каждая находка |
+| [`security-injection-test.md`](security-injection-test.md) | Разовый тест устойчивости слабой и сильной модели к скрытой инструкции в файле проекта (payload безвреден, файл-носитель откачен) |
 | [`sessions/`](sessions/) | Журнал сессий работы: дата, что решено и почему, что сделано, что осталось — по каждой сессии отдельный файл |
 | [`.claude/skills/qa-release-check/`](.claude/skills/qa-release-check/) | Повторяемый workflow «QA-прогон перед релизом» — вызывается перед каждым изменением `app-under-test/`, проверяет диф, покрытие спецификации, гоняет тесты и независимо (отдельным агентом без памяти о том, как писались тесты) проверяет, что ни один тест не маскирует известный баг |
