@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "build:pdf": "node scripts/build-pdf.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "homepage": "https://github.com/IDVhack/HomeworkDariaQA2#readme",
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@playwright/test": "^1.62.1"
+    "@playwright/test": "^1.62.1",
+    "marked": "^18.0.11"
   }
 }
