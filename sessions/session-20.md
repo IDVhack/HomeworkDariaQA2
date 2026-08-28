@@ -123,16 +123,28 @@ Playwright-набор приложения **не запускался** — к�
 
 ## Доки
 
-`README.md` не трогался (в нём нет раздела про `submission/` — там уже
-лежат `REPORT.pdf` / `qa-spec.pdf` без упоминания в доке).
+По команде «проверь файлы report и readme… дополни»:
+
+- Сверены все ссылки на файлы в `REPORT.md` и `README.md` с деревом
+  репозитория. В `REPORT.md` расхождений нет — все упомянутые файлы на
+  месте (`qa-runs/*` и `raw-test-output-2.txt` отсутствуют намеренно,
+  каталог в `.gitignore`, это оговорено в самом отчёте).
+- `README.md` был неполон — дополнен:
+  - блок сборки: добавлен абзац про `npm run build:deck` →
+    `submission/REPORT-deck.pdf`;
+  - «Где что лежит»: строка `scripts/` — добавлен `build-deck-pdf.js`;
+    строка `submission/` — добавлена презентация; новая строка
+    `app-under-test/session-detailed.md` (лог создания приложения,
+    раньше в репо был, но нигде не описан).
 
 ## Коммит / пуш
 
 - `6dba3b2` — `sessions/session-20.md` (первая версия журнала), по
   команде «коммит и пуш новых файлов».
-- Второй коммит — `scripts/build-deck-pdf.js`, `submission/REPORT-deck.pdf`,
-  `package.json` (скрипт `build:deck`) + это дополнение
-  `sessions/session-20.md`. Оба коммита запушены в `main`.
+- `90d8da7` — `scripts/build-deck-pdf.js`, `submission/REPORT-deck.pdf`,
+  `package.json` (скрипт `build:deck`) + дополнение `sessions/session-20.md`.
+- Третий коммит — правки `README.md` (полный список файлов) + это
+  дополнение `sessions/session-20.md`. Все коммиты запушены в `main`.
 
 ## Осталось
 

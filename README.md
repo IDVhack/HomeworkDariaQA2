@@ -46,14 +46,20 @@ npm test
 [`submission/REPORT.pdf`](submission/REPORT.pdf),
 [`submission/qa-spec.pdf`](submission/qa-spec.pdf).
 
+`npm run build:deck` — собрать слайдовую презентацию по `REPORT.md`
+(альбомная 16:9, 8 страниц: обложка + 5 блоков отчёта + финал) в
+[`submission/REPORT-deck.pdf`](submission/REPORT-deck.pdf)
+(`scripts/build-deck-pdf.js`, тот же headless Chromium).
+
 ## Где что лежит
 
 | Путь | Что это |
 |---|---|
 | [`app-under-test/`](app-under-test/) | Код приложения под тестом: `index-local.html` (основной объект тестирования, с локальным `localStorage`-хранилищем), `index-seeded.html`/`index-for-artifact-publish.html` (варианты для публикации как Claude Artifact) |
+| [`app-under-test/session-detailed.md`](app-under-test/session-detailed.md) | Подробный лог создания самого приложения (ТЗ, архитектурное решение, ход разработки) — предыстория до начала QA, не часть тестовой работы |
 | [`tests/`](tests/) | Автотесты Playwright: `accessibility.spec.js` (axe-core), `keyboard-focus.spec.js` (Escape/фокус/focus-trap), `functional-flow.spec.js` (сквозной сценарий регистрация→объявление→бронь + выделенный красный тест на баг Ф-1), `permissions.spec.js` (права по логину), `security.spec.js` (XSS-инъекция, подделка сессии), `volume-bugs.spec.js` (нагрузка/объём данных), `bypass-ui.spec.js` (принятые ограничения при обходе UI — цена, самобронь, гонка записи), `func-*.spec.js` (qa-spec 1.1–1.4: регистрация/вход/размещение/бронь), `a11y-*.spec.js` (qa-spec 2.1/2.4: клавиатура + axe на остальных экранах), `robust-*.spec.js` (qa-spec 3.1–3.3, 3.5–3.7: пустые поля, цена, регистр логина) |
-| [`scripts/`](scripts/) | `static-server.js` (локальный сервер для тестов, порт 8934), `build-pdf.js` (`npm run build:pdf` — сборка `REPORT.md`/`qa-spec.md` в `submission/*.pdf`) |
-| [`submission/`](submission/) | PDF-версии `REPORT.md` и `qa-spec.md` для сдачи, пересобираются `npm run build:pdf` |
+| [`scripts/`](scripts/) | `static-server.js` (локальный сервер для тестов, порт 8934), `build-pdf.js` (`npm run build:pdf` — сборка `REPORT.md`/`qa-spec.md` в `submission/*.pdf`), `build-deck-pdf.js` (`npm run build:deck` — слайдовая презентация по `REPORT.md` → `submission/REPORT-deck.pdf`) |
+| [`submission/`](submission/) | Материалы для сдачи: PDF-версии `REPORT.md` и `qa-spec.md` (`npm run build:pdf`) плюс слайдовая презентация [`REPORT-deck.pdf`](submission/REPORT-deck.pdf) (`npm run build:deck`) |
 | [`qa-spec.md`](qa-spec.md) | Спецификация тестирования — сценарии и ожидаемое поведение по разделам: функциональность, доступность, устойчивость к кривым данным, нагрузка |
 | [`qa-report.md`](qa-report.md), [`qa-report-solo.md`](qa-report-solo.md), [`qa-report-volume.md`](qa-report-volume.md) | Отчёты ручных/агентских прогонов по `qa-spec.md` на разных этапах |
 | [`qa-review-independent.md`](qa-review-independent.md) | Независимый аудит «что пропустили предыдущие прогоны», с пометками, каким коммитом закрыта каждая находка |
