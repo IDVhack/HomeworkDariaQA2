@@ -6,7 +6,8 @@
   "scripts": {
     "test": "playwright test",
     "test:report": "playwright show-report",
-    "build:pdf": "node scripts/build-pdf.js"
+    "build:pdf": "node scripts/build-pdf.js",
+    "build:deck": "node scripts/build-deck-pdf.js"
   },
   "repository": {
     "type": "git",
